@@ -1,14 +1,14 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 public class Dijkstra {
 
-    public int numberOfVertices,road;
+    int numberOfVertices, road, minDistNotFlooded;
+    boolean end = false;
 
 
-    public ArrayList<Vertex> vertexList = new ArrayList();
-    public ArrayList<Vertex>VertexOnLink = new ArrayList();
-    public Scanner console;
+    ArrayList<Vertex> vertexList = new ArrayList();
+    HashMap<Vertex, Integer> distanceMap = new HashMap<>();
+    Scanner console;
 
     public Dijkstra(){
         console = new Scanner(System.in);
@@ -21,11 +21,15 @@ public class Dijkstra {
         road = console.nextInt();
 
         // add the source vertex
-        vertexList.add(new Vertex(0, 0));
+        Vertex v0 = new Vertex(0,0);
+        vertexList.add(v0);
+        distanceMap.put(v0, v0.getDistance());
 
         // else vertices
         for (int i = 1; i < numberOfVertices; i++) {
-            vertexList.add(new Vertex(i));
+            Vertex vi = new Vertex(i);
+            vertexList.add(vi);
+            distanceMap.put(vi, vi.getDistance());
         }
 
         // input roads
@@ -43,6 +47,68 @@ public class Dijkstra {
         }
     }
 
+    public void searchUsing(Vertex vertex){
+
+        ArrayList<Edge> edges = vertex.getLinkedEdges();
+
+        vertex.setFlooded(true);
+        distanceMap.remove(vertex);
+
+        int newDist;
+        int oldDist;
+        Vertex dest;
+
+        for (Edge edge : edges){
+
+            dest = edge.getDest();
+            newDist = vertex.getDistance() + edge.getWeight();
+            oldDist = edge.getDest().getDistance();
+
+            if (oldDist > newDist){
+                dest.setDistance(newDist);
+
+                if (!dest.isFlooded()){
+                    distanceMap.put(edge.getDest(), newDist);
+                }
+            }
+        }
+
+    }
+
+
+    // get an array of vertices with min distance
+    public Vertex getMinDistVertex (){
+
+        Vertex rtn = null;
+
+        if (end){
+            return rtn;
+        }
+
+        for (Map.Entry<Vertex, Integer> entry : distanceMap.entrySet()){
+            if (entry.getValue() == minDistNotFlooded){
+                rtn = entry.getKey();
+            }
+        }
+
+        return rtn;
+    }
+
+
+    // get the min dist
+    public void minDist (){
+
+        if (distanceMap.isEmpty()){
+            end = true;
+            minDistNotFlooded = Integer.MAX_VALUE;
+        } else {
+            Object[] dists = distanceMap.values().toArray();
+            Arrays.sort(dists);
+            minDistNotFlooded = Integer.parseInt(dists[0].toString());
+        }
+
+
+    }
 
 
 
@@ -52,6 +118,20 @@ public class Dijkstra {
     public static void main(String[] args) {
 
         Dijkstra dijkstra = new Dijkstra();
+
+        HashMap<String, Integer> test = new HashMap<>();
+
+        test.put("hehe", 4);
+        test.put("haha", 5);
+        test.put("enen", 3);
+        test.put("guna", 2);
+        test.put("shit", 1);
+
+        Object[] dists = test.values().toArray();
+        Arrays.sort(dists);
+        int result = Integer.parseInt(dists[0].toString()) + 10000;
+        System.out.println(result);
+
 
     }
 }

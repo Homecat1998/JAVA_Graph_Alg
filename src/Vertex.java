@@ -38,10 +38,24 @@ public class Vertex {
         return distance;
     }
 
+    public boolean isFlooded() {
+        return flooded;
+    }
+
     public int getName() {
         return name;
     }
 
+
+    // set methods
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public void setFlooded(boolean flooded) {
+        this.flooded = flooded;
+    }
 
     // add neighbour
     public void addEdge (Vertex dest, int weight){
