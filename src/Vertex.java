@@ -21,5 +21,30 @@ public class Vertex {
         this.name = name;
     }
 
+    public Vertex (int name, int distance){
+        this.distance = distance;
+        this.flooded = false;
+        this.name = name;
+    }
 
+    // get methods
+
+
+    public ArrayList<Edge> getLinkedEdges() {
+        return linkedEdges;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+
+    public int getName() {
+        return name;
+    }
+
+
+    // add neighbour
+    public void addEdge (Vertex dest, int weight){
+        linkedEdges.add(new Edge(this, dest, weight));
+    }
 }
