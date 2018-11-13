@@ -42,10 +42,6 @@ public class Vertex {
         return flooded;
     }
 
-    public int getName() {
-        return name;
-    }
-
 
     // set methods
 

@@ -2,12 +2,11 @@ import java.util.*;
 
 public class Dijkstra {
 
-    int numberOfVertices, road, minDistNotFlooded;
-    boolean end = false;
+    private int numberOfVertices, road, minDistNotFlooded;
 
 
     ArrayList<Vertex> vertexList = new ArrayList();
-    HashMap<Vertex, Integer> distanceMap = new HashMap<>();
+    ArrayList<Vertex> unvisited = new ArrayList<>();
     Scanner console;
 
     public Dijkstra(){
@@ -23,13 +22,11 @@ public class Dijkstra {
         // add the source vertex
         Vertex v0 = new Vertex(0,0);
         vertexList.add(v0);
-        distanceMap.put(v0, v0.getDistance());
 
         // else vertices
         for (int i = 1; i < numberOfVertices; i++) {
             Vertex vi = new Vertex(i);
             vertexList.add(vi);
-            distanceMap.put(vi, vi.getDistance());
         }
 
         // input roads
@@ -52,7 +49,7 @@ public class Dijkstra {
         ArrayList<Edge> edges = vertex.getLinkedEdges();
 
         vertex.setFlooded(true);
-        distanceMap.remove(vertex);
+        unvisited.remove(vertex);
 
         int newDist;
         int oldDist;
@@ -67,70 +64,49 @@ public class Dijkstra {
             if (oldDist > newDist){
                 dest.setDistance(newDist);
 
-                if (!dest.isFlooded()){
-                    distanceMap.put(edge.getDest(), newDist);
-                }
             }
         }
-
     }
 
-
     // get an array of vertices with min distance
-    public Vertex getMinDistVertex (){
+    private Vertex getMinDistVertex (){
 
         Vertex rtn = null;
+        int dist = Integer.MAX_VALUE;
 
-        if (end){
-            return rtn;
+        if (unvisited.isEmpty()){
+            return null;
         }
 
-        for (Map.Entry<Vertex, Integer> entry : distanceMap.entrySet()){
-            if (entry.getValue() == minDistNotFlooded){
-                rtn = entry.getKey();
+        for (Vertex vertex : unvisited){
+            if (vertex.getDistance() < dist){
+                rtn = vertex;
+                dist = vertex.getDistance();
             }
         }
-
         return rtn;
     }
 
 
-    // get the min dist
-    public void minDist (){
+    // main function
+    public void run(){
 
-        if (distanceMap.isEmpty()){
-            end = true;
-            minDistNotFlooded = Integer.MAX_VALUE;
-        } else {
-            Object[] dists = distanceMap.values().toArray();
-            Arrays.sort(dists);
-            minDistNotFlooded = Integer.parseInt(dists[0].toString());
+        Vertex temp;
+
+        while (!unvisited.isEmpty()){
+            temp = getMinDistVertex();
+            searchUsing(temp);
         }
 
-
     }
-
-
-
-
 
 
     public static void main(String[] args) {
 
         Dijkstra dijkstra = new Dijkstra();
 
-        HashMap<String, Integer> test = new HashMap<>();
-
-        test.put("hehe", 4);
-        test.put("haha", 5);
-        test.put("enen", 3);
-        test.put("guna", 2);
-        test.put("shit", 1);
-
-        Object[] dists = test.values().toArray();
-        Arrays.sort(dists);
-        int result = Integer.parseInt(dists[0].toString()) + 10000;
-        System.out.println(result);
+        dijkstra.getInput();
+        dijkstra.run();
 
 
     }
