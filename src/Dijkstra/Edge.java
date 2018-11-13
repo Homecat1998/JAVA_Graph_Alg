@@ -1,4 +1,4 @@
-import jdk.nashorn.internal.ir.IdentNode;
+package Dijkstra;
 
 public class Edge {
 
